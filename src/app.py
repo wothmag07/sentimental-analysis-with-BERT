@@ -3,12 +3,13 @@ import config
 import torch
 
 from flask import Flask
+from flask import render_template
 from flask import request
 from model import BERTBasedUncased
 
 app = Flask(__name__)
 
-DEVICE = 'cuda'
+DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 model = None
 
 def sentence_pred(sentence, model):
@@ -50,23 +51,29 @@ def sentence_pred(sentence, model):
     outputs = torch.sigmoid(outputs).cpu().detach().numpy()
     return outputs[0][0]
 
+@app.route('/')
+def home():
+    # Render the input form (index.html)
+    return render_template('index.html')
+
 @app.route('/predict')
 def predict():
-    sentence = flask.request.args.get("sentence")
-    print(sentence)
-    postive_pred = sentence_pred(sentence, model=MODEL)
-    negative_pred = 1-postive_pred
+    sentence = request.args.get("sentence")
+    positive_pred = sentence_pred(sentence, model=MODEL)
+    negative_pred = 1 - positive_pred
     
-    response = {}
-    response['response'] = {"positive": str(postive_pred),
-                            "negative": str(negative_pred),
-                            "sentence": str(sentence)}
-    return flask.jsonify(response)
+    # Render the result page (result.html) with the prediction
+    return render_template(
+        'output.html',
+        sentence=sentence,
+        positive_pred=f"{positive_pred:.2f}",
+        negative_pred=f"{negative_pred:.2f}"
+    )
+
 
 
 if __name__ == "__main__":
     MODEL = BERTBasedUncased()
-    MODEL.load_state_dict(torch.load(config.MODEL_PATH))
-    MODEL.to(DEVICE)
+    MODEL.load_state_dict(torch.load(config.MODEL_PATH, map_location=torch.device(DEVICE)))
     MODEL.eval()
-    app.run()
+    app.run(debug=True)

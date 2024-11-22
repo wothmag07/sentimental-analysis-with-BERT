@@ -24,7 +24,7 @@ def run():
     no_decay = ['bias','LayerNorm.bias','LayerNorm.weight']
     optimizer_parameters = [
         {'params': [p for n,p in param_optimizers if not any(nd in n for nd in no_decay)], 'weight_decay':0.001},
-        {'params': [p for n,p in param_optimizers if  any(nd in n for nd in no_decay)], 'weight_decay':0.0}
+        {'params': [p for n,p in param_optimizers if any(nd in n for nd in no_decay)], 'weight_decay':0.0}
     ]
     #print(optimizer_parameters)
 
@@ -49,10 +49,12 @@ def run():
         #training_loss.extend(train_loss)
         outputs, targets, eval_loss = engine.evaluate_fn(valid_dataloader, model=model, device=device)
         #.extend(eval_loss)
-        outputs = np.array(outputs) >= 0.5
-        targets = np.array(targets)
-        print(outputs.shape)
-        print(targets.shape)
+        outputs = np.array(outputs).reshape(-1) >= 0.5  # Flatten to (5000,)
+        targets = np.array(targets).reshape(-1)  # Ensure targets is also 1D
+
+        # print(len(outputs))  # Should be 5000
+        # print(len(targets))  # Should also be 5000
+
         accuracy, precision, recall, f1score =  engine.eval_metrics(outputs=outputs, targets=targets)
 
         print("Epoch {}/{},  Accuracy: {:.3f}".format(epoch+1,config.TRAINING_EPOCHS, accuracy))
@@ -68,7 +70,3 @@ def run():
 
 if __name__ == "__main__":
     run()
-
-
-
-

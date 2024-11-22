@@ -1,14 +1,11 @@
 import pandas as pd
 import config
-import zipfile
 import torch
 import dataset
 from sklearn.model_selection import train_test_split
 
 def preprocess(dataset_path):
-    
-    '''with zipfile.ZipFile('../NLP project/input/IMDB Dataset.csv.zip','r') as zipref:
-        zipref.extractall('../NLP project/input/')'''
+
     
     df = pd.read_csv(dataset_path).fillna(0)
     df.sentiment = df.sentiment.apply(lambda x: 1 if x == 'positive' else 0)
