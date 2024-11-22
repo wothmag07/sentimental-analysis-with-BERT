@@ -1,16 +1,8 @@
-elasticsearch==8.5.3
-farm-haystack==1.16.0
-kaggle==1.5.16
-nltk==3.8.1
-numpy== 1.24.0
-pandas== 1.5.3
-rouge==1.0.1
-seaborn==0.12.0
+torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+flask
 transformers
-sentence-transformers
-spacy==3.5.0
-spacy-transformers
-flair==0.12.2
-tensorflow==2.10.0
-ipykernel==6.22.0
-pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu117
+matplotlib
+scikit-learn
+numpy
+tqdm
+pandas
