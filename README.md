@@ -71,8 +71,8 @@ Ensure the dataset is in a `.csv` or `.tsv` format before training and try to do
 
 ## Usage  
 
-1. **Prepare Dataset**: Place your dataset in the `data/` folder. And do the necessary changes in dataset and preprocess file for training phase.  
-2. **Train the Model**: You can change the parameters which are mentioned in config file however you want.Run the script to fine-tune the BERT model:  
+1. **Prepare Dataset**: Create a folder named input and place your dataset in that. And do the necessary changes in dataset and preprocess file for training phase.  
+2. **Train the Model**: You can change the parameters and path details which are mentioned in config file however you want.Run the script to fine-tune the BERT model:  
    ```bash  
    python train.py  
    ```  
